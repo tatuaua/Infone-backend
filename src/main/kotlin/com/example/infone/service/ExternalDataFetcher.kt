@@ -12,7 +12,7 @@ class ExternalDataFetcher(
     fun run() {
         dataPointFetchers.forEach { fetcher ->
             val dataPoint = fetcher.fetch()
-            dataPointService.updateDataPoint(dataPoint.name, dataPoint.value)
+            dataPointService.updateDataPoint(dataPoint.id, dataPoint.name, dataPoint.value)
         }
     }
 }

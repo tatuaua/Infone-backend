@@ -14,7 +14,8 @@ class DataPointJdbcRepository(private val jdbcTemplate: JdbcTemplate) : DataPoin
         val dropTable = "DROP TABLE IF EXISTS data_points"
         val createTable = """
             CREATE TABLE data_points (
-                name VARCHAR(255) PRIMARY KEY,
+                id VARCHAR(255) PRIMARY KEY,
+                name VARCHAR(255),
                 value VARCHAR(255)
             )
         """
@@ -23,22 +24,19 @@ class DataPointJdbcRepository(private val jdbcTemplate: JdbcTemplate) : DataPoin
     }
 
     override fun getDataPoints(): List<DataPoint> {
-        val sql = "SELECT name, value FROM data_points"
+        val sql = "SELECT id, name, value FROM data_points"
         return jdbcTemplate.query(sql) { rs, _ ->
-            DataPoint(rs.getString("name"), rs.getString("value"))
+            DataPoint(rs.getString("id"), rs.getString("name"), rs.getString("value"))
         }
     }
 
-    override fun getDataPoint(name: String): DataPoint? {
-        val sql = "SELECT name, value FROM data_points WHERE name = ?"
-        return jdbcTemplate.queryForObject(sql, DataPoint::class.java, name)
+    override fun getDataPoint(id: String): DataPoint? {
+        val sql = "SELECT id, name, value FROM data_points WHERE id = ?"
+        return jdbcTemplate.queryForObject(sql, DataPoint::class.java, id)
     }
 
-    override fun upsertDatapoint(name: String, value: String) {
-        val sql = """
-            INSERT INTO data_points (name, value) VALUES (?, ?)
-            ON CONFLICT (name) DO UPDATE SET value = ?
-        """
-        jdbcTemplate.update(sql, name, value, value)
+    override fun upsertDatapoint(id: String, name: String, value: String) {
+        val sql = "INSERT INTO data_points (id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE name = ?, value = ?"
+        jdbcTemplate.update(sql, id, name, value, name, value)
     }
 }

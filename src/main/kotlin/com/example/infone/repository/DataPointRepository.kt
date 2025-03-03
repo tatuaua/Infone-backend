@@ -5,6 +5,6 @@ import com.example.infone.model.DataPoint
 interface DataPointRepository {
     fun createTable()
     fun getDataPoints(): List<DataPoint>
-    fun getDataPoint(name: String): DataPoint?
-    fun upsertDatapoint(name: String, value: String)
+    fun getDataPoint(id: String): DataPoint?
+    fun upsertDatapoint(id: String, name: String, value: String)
 }

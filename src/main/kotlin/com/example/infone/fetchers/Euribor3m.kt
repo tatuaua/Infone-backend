@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
+import java.util.*
 
 @Component
 class Euribor3m (private val requestHelper: RequestHelper) : DataPointFetcher {
@@ -16,6 +17,7 @@ class Euribor3m (private val requestHelper: RequestHelper) : DataPointFetcher {
     lateinit var apiKey: String
 
     private val mapper = ObjectMapper()
+    private val id = UUID.randomUUID().toString()
 
     override fun fetch(): DataPoint {
 
@@ -32,6 +34,6 @@ class Euribor3m (private val requestHelper: RequestHelper) : DataPointFetcher {
 
         val value = mapper.readTree(data).get("3m").asText()
 
-        return DataPoint("Euribor 3m", value)
+        return DataPoint(id, "Euribor 3m", value)
     }
 }

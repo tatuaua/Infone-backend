@@ -21,14 +21,14 @@ class DataPointController(private val dataPointRepository: DataPointRepository) 
         return dataPoints
     }
 
-    @GetMapping("/datapoints/{name}")
-    fun getDataPoint(@PathVariable name: String): DataPoint? {
-        logger.info("Fetching data point with name: {}", name)
-        val dataPoint = dataPointRepository.getDataPoint(name)
+    @GetMapping("/datapoints/{id}")
+    fun getDataPoint(@PathVariable id: String): DataPoint? {
+        logger.info("Fetching data point with id: {}", id)
+        val dataPoint = dataPointRepository.getDataPoint(id)
         if (dataPoint != null) {
             logger.info("Data point found: {}", dataPoint)
         } else {
-            logger.warn("Data point not found for name: {}", name)
+            logger.warn("Data point not found for id: {}", id)
         }
         return dataPoint
     }

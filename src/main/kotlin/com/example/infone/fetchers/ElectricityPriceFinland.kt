@@ -9,13 +9,14 @@ import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
+import java.util.*
 
 @Component
 class ElectricityPriceFinland(private val requestHelper: RequestHelper) : DataPointFetcher {
 
     private val mapper = ObjectMapper()
-
     private val url = "https://api.porssisahko.net/v1/latest-prices.json"
+    private val id = UUID.randomUUID().toString()
 
     override fun fetch(): DataPoint {
         val data = requestHelper.makeRequest(url, HttpMethod.GET, HttpHeaders(), null)
@@ -33,6 +34,6 @@ class ElectricityPriceFinland(private val requestHelper: RequestHelper) : DataPo
         val timeOfDay = highestPriceData.second
             .let { ZonedDateTime.parse(it).hour.toString() }
 
-        return DataPoint("Highest electricity price (Finland, 48h) at $timeOfDay:00", highestPrice.toString())
+        return DataPoint(id, "Highest electricity price (Finland, 48h) at $timeOfDay:00", highestPrice.toString())
     }
 }
