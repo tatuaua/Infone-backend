@@ -19,9 +19,9 @@ class ElectricityPriceFinland(private val requestHelper: RequestHelper) : DataPo
     private val id = UUID.randomUUID().toString()
 
     override fun fetch(): DataPoint {
-        val data = requestHelper.makeRequest(url, HttpMethod.GET, HttpHeaders(), null)
+        val response = requestHelper.makeRequest(url, HttpMethod.GET, HttpHeaders(), null)
 
-        val json = mapper.readTree(data)
+        val json = mapper.readTree(response.body)
         val pricesArray = json.get("prices")
 
         val prices = pricesArray

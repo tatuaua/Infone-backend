@@ -3,37 +3,40 @@ package com.example.infone.fetchers
 import com.example.infone.model.DataPoint
 import com.example.infone.model.DataPointFetcher
 import com.example.infone.model.RequestHelper
+import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.stereotype.Component
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import java.nio.file.Files
+import java.text.DecimalFormat
 import java.util.*
 
 @Component
 class Euribor3m (private val requestHelper: RequestHelper) : DataPointFetcher {
 
-    @Value("\${x-rapidapi-key}")
-    lateinit var apiKey: String
-
     private val mapper = ObjectMapper()
+    private val url = "https://data-api.ecb.europa.eu/service/data/FM/M.U2.EUR.RT.MM.EURIBOR3MD_.HSTA?lastNObservations=24&detail=dataonly&format=jsondata"
     private val id = UUID.randomUUID().toString()
 
     override fun fetch(): DataPoint {
-
-        val headers = HttpHeaders().apply {
-            set("X-RapidAPI-Key", apiKey)
-        }
-
-        val data = requestHelper.makeRequest(
-            "https://euribor.p.rapidapi.com/",
+        val response: ResponseEntity<Resource> = requestHelper.makeFileRequest(
+            url,
             HttpMethod.GET,
-            headers,
+            HttpHeaders(),
             null
         )
 
-        val value = mapper.readTree(data).get("3m").asText()
-
-        return DataPoint(id, "Euribor 3m", value)
+        val fileResource = response.body ?: throw RuntimeException("File resource is empty")
+        val tempFile = Files.createTempFile("euribor", ".json")
+        fileResource.inputStream.use { input -> Files.copy(input, tempFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING) }
+        val jsonNode: JsonNode = mapper.readTree(Files.newBufferedReader(tempFile))
+        val value = jsonNode.get("dataSets").first().get("series").first().get("observations").last().get(0).asDouble()
+        val formatted = DecimalFormat("#.###").format(value).replace(",", ".")
+        return DataPoint(id, "Euribor 3M", formatted)
     }
 }

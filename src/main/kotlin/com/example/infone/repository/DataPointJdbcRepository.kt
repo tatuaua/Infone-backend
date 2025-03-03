@@ -36,7 +36,12 @@ class DataPointJdbcRepository(private val jdbcTemplate: JdbcTemplate) : DataPoin
     }
 
     override fun upsertDatapoint(id: String, name: String, value: String) {
-        val sql = "INSERT INTO data_points (id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE name = ?, value = ?"
-        jdbcTemplate.update(sql, id, name, value, name, value)
+        val sql = """
+        INSERT INTO data_points (id, name, value) 
+        VALUES (?, ?, ?) 
+        ON CONFLICT(id) 
+        DO UPDATE SET name = EXCLUDED.name, value = EXCLUDED.value
+    """
+        jdbcTemplate.update(sql, id, name, value)
     }
 }
