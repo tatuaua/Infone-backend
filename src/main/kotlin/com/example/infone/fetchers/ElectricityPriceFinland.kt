@@ -28,10 +28,11 @@ class ElectricityPriceFinland(private val requestHelper: RequestHelper) : DataPo
         val highestPrice = highestPriceData?.second ?: 0.0
         val timeOfDay = highestPriceData?.first ?: ""
 
-        return DataPoint(id, "Highest electricity price (Finland, 24h->) at $timeOfDay:00", highestPrice.toString())
+        return DataPoint(id, "Highest electricity price (Finland, 24h)", "$highestPrice (cent/kWh) at $timeOfDay")
     }
 
     fun getHighestPriceInNext24hrs(jsonData: String): Pair<String, Double>? {
+        val mapper = ObjectMapper()
         val rootNode: JsonNode = mapper.readTree(jsonData)
         val pricesArray = rootNode.get("prices")
         val currentTime = ZonedDateTime.now()
@@ -49,7 +50,8 @@ class ElectricityPriceFinland(private val requestHelper: RequestHelper) : DataPo
             }
             .maxByOrNull { it.second }
 
-        return highestPrice?.let { it.first.toString() to it.second }
+        return highestPrice?.let {
+            it.first.toLocalTime().toString() to it.second
+        }
     }
-
 }
