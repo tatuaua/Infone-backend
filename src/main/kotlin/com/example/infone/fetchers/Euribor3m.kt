@@ -6,22 +6,19 @@ import com.example.infone.model.RequestHelper
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.stereotype.Component
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import java.nio.file.Files
 import java.text.DecimalFormat
-import java.util.*
 
 @Component
 class Euribor3m (private val requestHelper: RequestHelper) : DataPointFetcher {
 
     private val mapper = ObjectMapper()
     private val url = "https://data-api.ecb.europa.eu/service/data/FM/M.U2.EUR.RT.MM.EURIBOR3MD_.HSTA?lastNObservations=24&detail=dataonly&format=jsondata"
-    private val id = UUID.randomUUID().toString()
+    private val id = DataPointFetcher.getNextId()
 
     override fun fetch(): DataPoint {
         val response: ResponseEntity<Resource> = requestHelper.makeFileRequest(

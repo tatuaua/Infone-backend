@@ -9,6 +9,7 @@ class DataPointService(
     @Autowired private val dataPointRepository: DataPointRepository
 ) {
     fun getDataPoints() = dataPointRepository.getDataPoints()
-    fun getDataPoint(id: String) = dataPointRepository.getDataPoint(id)
-    fun updateDataPoint(id: String, name: String, value: String) = dataPointRepository.upsertDatapoint(id, name, value)
+    fun getDataPoints(ids: List<Int>) = dataPointRepository.getDataPoints(ids)
+    fun getDataPoint(id: Int) = dataPointRepository.getDataPoint(id)
+    fun updateDataPoint(id: Int, name: String, value: String) = dataPointRepository.upsertDatapoint(id, name, value)
 }
