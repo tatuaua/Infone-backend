@@ -2,7 +2,7 @@ package com.example.infone.fetchers
 
 import com.example.infone.model.DataPoint
 import com.example.infone.model.DataPointFetcher
-import com.example.infone.model.RequestHelper
+import com.example.infone.model.RequestUtils
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.HttpHeaders
@@ -13,13 +13,13 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 @Component
-class ElectricityPriceFinland(private val requestHelper: RequestHelper) : DataPointFetcher {
+class ElectricityPriceFinland : DataPointFetcher {
 
     private val url = "https://api.porssisahko.net/v1/latest-prices.json"
     private val id = DataPointFetcher.getNextId()
 
     override fun fetch(): DataPoint {
-        val response = requestHelper.makeRequest(url, HttpMethod.GET, HttpHeaders(), null)
+        val response = RequestUtils.makeRequest(url, HttpMethod.GET, HttpHeaders(), null)
 
         val body = response.body ?: throw RuntimeException("Response body is empty")
         val highestPriceData = getHighestPriceInNext24hrs(body)
