@@ -1,4 +1,4 @@
-package com.example.infone.model
+package com.example.infone.utils
 
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpEntity

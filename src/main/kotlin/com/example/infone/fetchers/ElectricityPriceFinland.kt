@@ -2,7 +2,7 @@ package com.example.infone.fetchers
 
 import com.example.infone.model.DataPoint
 import com.example.infone.model.DataPointFetcher
-import com.example.infone.model.RequestUtils
+import com.example.infone.utils.RequestUtils
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.HttpHeaders
