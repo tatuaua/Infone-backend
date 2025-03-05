@@ -15,7 +15,6 @@ import java.time.temporal.ChronoUnit
 @Component
 class ElectricityPriceFinland(private val requestHelper: RequestHelper) : DataPointFetcher {
 
-    private val mapper = ObjectMapper()
     private val url = "https://api.porssisahko.net/v1/latest-prices.json"
     private val id = DataPointFetcher.getNextId()
 
@@ -28,7 +27,7 @@ class ElectricityPriceFinland(private val requestHelper: RequestHelper) : DataPo
         val highestPrice = highestPriceData?.second ?: 0.0
         val timeOfDay = highestPriceData?.first ?: ""
 
-        return DataPoint(id, "Highest electricity price (Finland, 24h)", "$highestPrice (cent/kWh) at $timeOfDay")
+        return DataPoint(id, "Max elec. price (FI24)", "$highestPrice at $timeOfDay")
     }
 
     fun getHighestPriceInNext24hrs(jsonData: String): Pair<String, Double>? {
