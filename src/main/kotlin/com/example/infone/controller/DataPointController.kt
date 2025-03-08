@@ -23,15 +23,22 @@ class DataPointController(private val dataPointRepository: DataPointRepository) 
             logger.warn("Invalid API key: {}", apiKey)
             return ResponseEntity.status(401).build()
         }
-        val dataPoints: List<DataPoint>
-        if(ids.isEmpty()) {
-            logger.info("Fetching all data points")
-            dataPoints = dataPointRepository.getDataPoints()
-        } else {
-            logger.info("Fetching data points by ids: {}", ids)
-            dataPoints = dataPointRepository.getDataPoints(ids)
-        }
+        logger.info("Fetching data points by ids: {}", ids)
+        val dataPoints = dataPointRepository.getDataPoints(ids)
         logger.info("Retrieved {} data points", dataPoints.size)
         return ResponseEntity.ok(dataPoints)
     }
+
+    @GetMapping("/datapoints")
+    fun getDataPoints(@RequestHeader("X-API-KEY") apiKey: String): ResponseEntity<List<DataPoint>> {
+        if (apiKey != this.apiKey) {
+            logger.warn("Invalid API key: {}", apiKey)
+            return ResponseEntity.status(401).build()
+        }
+        logger.info("Fetching all data points")
+        val dataPoints = dataPointRepository.getDataPoints()
+        logger.info("Retrieved {} data points", dataPoints.size)
+        return ResponseEntity.ok(dataPoints)
+    }
+
 }
