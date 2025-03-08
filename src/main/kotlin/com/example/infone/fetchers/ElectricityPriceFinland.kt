@@ -17,6 +17,7 @@ class ElectricityPriceFinland : DataPointFetcher {
 
     private val url = "https://api.porssisahko.net/v1/latest-prices.json"
     private val id = DataPointFetcher.getNextId()
+    private val description = "Maximum electricity price in Finland in the next 24 hours"
 
     override fun fetch(): DataPoint {
         val response = RequestUtils.makeRequest(url, HttpMethod.GET, HttpHeaders(), null)
@@ -27,7 +28,7 @@ class ElectricityPriceFinland : DataPointFetcher {
         val highestPrice = highestPriceData?.second ?: 0.0
         val timeOfDay = highestPriceData?.first ?: ""
 
-        return DataPoint(id, "Max elec. price (FI24)", "$highestPrice at $timeOfDay")
+        return DataPoint(id, "Max elec. price (FI24)", "$highestPrice at $timeOfDay", description)
     }
 
     fun getHighestPriceInNext24hrs(jsonData: String): Pair<String, Double>? {

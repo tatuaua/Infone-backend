@@ -19,6 +19,7 @@ class Euribor3m: DataPointFetcher {
     private val mapper = ObjectMapper()
     private val url = "https://data-api.ecb.europa.eu/service/data/FM/M.U2.EUR.RT.MM.EURIBOR3MD_.HSTA?lastNObservations=24&detail=dataonly&format=jsondata"
     private val id = DataPointFetcher.getNextId()
+    private val description = "Euribor rate for 3 months"
 
     override fun fetch(): DataPoint {
         val response: ResponseEntity<Resource> = RequestUtils.makeFileRequest(
@@ -34,6 +35,6 @@ class Euribor3m: DataPointFetcher {
         val jsonNode: JsonNode = mapper.readTree(Files.newBufferedReader(tempFile))
         val value = jsonNode.get("dataSets").first().get("series").first().get("observations").last().get(0).asDouble()
         val formatted = DecimalFormat("#.###").format(value).replace(",", ".")
-        return DataPoint(id, "Euribor 3M", formatted)
+        return DataPoint(id, "Euribor 3M", formatted, description)
     }
 }

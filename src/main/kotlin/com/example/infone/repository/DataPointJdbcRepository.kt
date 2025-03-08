@@ -16,7 +16,8 @@ class DataPointJdbcRepository(private val jdbcTemplate: JdbcTemplate) : DataPoin
             CREATE TABLE data_points (
                 id INTEGER PRIMARY KEY,
                 name VARCHAR(255),
-                value VARCHAR(255)
+                value VARCHAR(255),
+                description VARCHAR(255)
             )
         """
         jdbcTemplate.execute(dropTable)
@@ -24,32 +25,32 @@ class DataPointJdbcRepository(private val jdbcTemplate: JdbcTemplate) : DataPoin
     }
 
     override fun getDataPoints(): List<DataPoint> {
-        val sql = "SELECT id, name, value FROM data_points"
+        val sql = "SELECT id, name, value, description FROM data_points"
         return jdbcTemplate.query(sql) { rs, _ ->
-            DataPoint(rs.getInt("id"), rs.getString("name"), rs.getString("value"))
+            DataPoint(rs.getInt("id"), rs.getString("name"), rs.getString("value"), rs.getString("description"))
         }
     }
 
     override fun getDataPoints(ids: List<Int>): List<DataPoint> {
-        val sql = "SELECT id, name, value FROM data_points WHERE id IN (${ids.joinToString(",") { "?" }})"
+        val sql = "SELECT id, name, value, description FROM data_points WHERE id IN (${ids.joinToString(",") { "?" }})"
 
         return jdbcTemplate.query(sql, ids.toTypedArray()) { rs, _ ->
-            DataPoint(rs.getInt("id"), rs.getString("name"), rs.getString("value"))
+            DataPoint(rs.getInt("id"), rs.getString("name"), rs.getString("value"), rs.getString("description"))
         }
     }
 
     override fun getDataPoint(id: Int): DataPoint? {
-        val sql = "SELECT id, name, value FROM data_points WHERE id = ?"
+        val sql = "SELECT id, name, value, description FROM data_points WHERE id = ?"
         return jdbcTemplate.queryForObject(sql, DataPoint::class.java, id)
     }
 
-    override fun upsertDatapoint(id: Int, name: String, value: String) {
+    override fun upsertDatapoint(id: Int, name: String, value: String, description: String) {
         val sql = """
-        INSERT INTO data_points (id, name, value) 
-        VALUES (?, ?, ?) 
+        INSERT INTO data_points (id, name, value, description) 
+        VALUES (?, ?, ?, ?) 
         ON CONFLICT(id) 
-        DO UPDATE SET name = EXCLUDED.name, value = EXCLUDED.value
+        DO UPDATE SET name = EXCLUDED.name, value = EXCLUDED.value, description = EXCLUDED.description
     """
-        jdbcTemplate.update(sql, id, name, value)
+        jdbcTemplate.update(sql, id, name, value, description)
     }
 }
