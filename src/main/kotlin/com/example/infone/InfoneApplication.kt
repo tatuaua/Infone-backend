@@ -9,9 +9,10 @@ import org.springframework.boot.runApplication
 class InfoneApplication
 
 fun main(args: Array<String>) {
-
-    runApplication<InfoneApplication>(*args).apply {
-        getBean(FetcherRunner::class.java).run()
-        getBean(DataPointService::class.java).getDataPoints().forEach { println("DataPoint: $it") }
+    val context = runApplication<InfoneApplication>(*args)
+    val fetcherRunner = context.getBean(FetcherRunner::class.java)
+    while(true) {
+        fetcherRunner.run()
+        Thread.sleep(600000)
     }
 }
