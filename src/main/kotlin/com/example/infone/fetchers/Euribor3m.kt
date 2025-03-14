@@ -22,7 +22,7 @@ class Euribor3m: DataPointFetcher {
     private val description = "Euribor rate for 3 months"
 
     override fun fetch(): DataPoint {
-        val response: ResponseEntity<Resource> = RequestUtils.makeFileRequest(
+        val response = RequestUtils.makeFileRequest(
             url,
             HttpMethod.GET,
             HttpHeaders(),
