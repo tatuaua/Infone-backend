@@ -1,19 +1,16 @@
 package com.example.infone.fetchers
 
-import com.example.infone.model.DataPoint
 import com.example.infone.model.DataPointFetcher
+import com.example.infone.model.DataPoint
 import com.example.infone.utils.RequestUtils
 import com.example.infone.utils.Util
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
-import java.text.DecimalFormat
 
 @Component
-class SP500 : DataPointFetcher {
+class STOXX50E : DataPointFetcher {
 
-    private val ticker = "^GSPC"
+    private val ticker = "^STOXX50E"
     private val period = "2d"
     private val interval = "1d"
     val id = DataPointFetcher.getNextId()
@@ -37,7 +34,7 @@ class SP500 : DataPointFetcher {
             val oneDayChange = todayClose - yesterdayClose
             val formattedChange = Util.formatDouble(oneDayChange)
             val formattedPercentage = Util.formatDouble(oneDayChange / yesterdayClose * 100)
-            return DataPoint(id, "S&P 500", "$formattedChange ($formattedPercentage%)", "S&P 500 index at close")
+            return DataPoint(id, "STOXX 50 Europe", "$formattedChange ($formattedPercentage%)", "STOXX 50 Europe index at close")
         } else {
             throw RuntimeException("Not enough data available to calculate one-day change")
         }

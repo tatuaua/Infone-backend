@@ -29,4 +29,13 @@ object RequestUtils {
             throw RuntimeException("Failed to fetch file: ${response.statusCode}")
         }
     }
+
+    fun yahooFinanceRequest(ticker: String, period: String, interval: String): ResponseEntity<String> {
+        val url = "https://query1.finance.yahoo.com/v8/finance/chart/$ticker?range=$period&interval=$interval"
+        val headers = HttpHeaders().apply {
+            set("User-Agent", "PostmanRuntime/7.43.2")
+            set("Accept", "*/*")
+        }
+        return makeRequest(url, HttpMethod.GET, headers, null)
+    }
 }
