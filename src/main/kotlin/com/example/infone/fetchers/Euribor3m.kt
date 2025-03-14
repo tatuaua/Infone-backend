@@ -3,6 +3,7 @@ package com.example.infone.fetchers
 import com.example.infone.model.DataPoint
 import com.example.infone.model.DataPointFetcher
 import com.example.infone.utils.RequestUtils
+import com.example.infone.utils.Util
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.stereotype.Component
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -34,7 +35,7 @@ class Euribor3m: DataPointFetcher {
         fileResource.inputStream.use { input -> Files.copy(input, tempFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING) }
         val jsonNode: JsonNode = mapper.readTree(Files.newBufferedReader(tempFile))
         val value = jsonNode.get("dataSets").first().get("series").first().get("observations").last().get(0).asDouble()
-        val formatted = DecimalFormat("#.###").format(value).replace(",", ".")
+        val formatted = Util.formatDouble(value)
         return DataPoint(id, "Euribor 3M", formatted, description)
     }
 }
