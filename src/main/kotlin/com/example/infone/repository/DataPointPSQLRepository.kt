@@ -2,15 +2,18 @@ package com.example.infone.repository
 
 import com.example.infone.model.DataPoint
 import jakarta.annotation.PostConstruct
+import org.springframework.context.annotation.Profile
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 
 @Suppress("SqlNoDataSourceInspection")
 @Repository
-class DataPointJdbcRepository(private val jdbcTemplate: JdbcTemplate) : DataPointRepository {
+@Profile("docker")
+class DataPointPSQLRepository(private val jdbcTemplate: JdbcTemplate) : DataPointRepository {
 
     @PostConstruct
     override fun createTable() {
+        print("Creating table")
         val dropTable = "DROP TABLE IF EXISTS data_points"
         val createTable = """
             CREATE TABLE data_points (
@@ -37,11 +40,6 @@ class DataPointJdbcRepository(private val jdbcTemplate: JdbcTemplate) : DataPoin
         return jdbcTemplate.query(sql, ids.toTypedArray()) { rs, _ ->
             DataPoint(rs.getInt("id"), rs.getString("name"), rs.getString("value"), rs.getString("description"))
         }
-    }
-
-    override fun getDataPoint(id: Int): DataPoint? {
-        val sql = "SELECT id, name, value, description FROM data_points WHERE id = ?"
-        return jdbcTemplate.queryForObject(sql, DataPoint::class.java, id)
     }
 
     override fun upsertDatapoint(id: Int, name: String, value: String, description: String) {

@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+name: infone-local
+api.key: some-api-key
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    password: secret
+    url: jdbc:postgresql://postgres:5432/mydatabase
+    username: myuser
+
+name: infone-docker
+api.key: some-api-key
