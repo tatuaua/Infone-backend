@@ -6,7 +6,7 @@ import com.example.infone.utils.RequestUtils
 import com.example.infone.utils.Util
 import com.fasterxml.jackson.databind.ObjectMapper
 
-abstract class StockIndexFetcher(
+abstract class IndexFetcher(
     private val ticker: String,
     private val indexName: String,
     private val description: String
