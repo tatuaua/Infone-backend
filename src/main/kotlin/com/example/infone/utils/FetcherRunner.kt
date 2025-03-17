@@ -15,12 +15,6 @@ class FetcherRunner(
     @Autowired private val dataPointFetchers: List<DataPointFetcher>
 ) {
     private val logger: Logger = LoggerFactory.getLogger(FetcherRunner::class.java)
-    fun run() {
-        dataPointFetchers.forEach { fetcher ->
-            val dataPoint = fetcher.fetch()
-            dataPointService.updateDataPoint(dataPoint.id, dataPoint.name, dataPoint.value, dataPoint.description)
-        }
-    }
 
     suspend fun runAsync() = coroutineScope {
         logger.info("Running ${dataPointFetchers.size} fetchers")

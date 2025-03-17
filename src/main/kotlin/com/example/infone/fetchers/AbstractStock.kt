@@ -1,20 +1,20 @@
 package com.example.infone.fetchers
 
-import com.example.infone.model.DataPointFetcher
 import com.example.infone.model.DataPoint
+import com.example.infone.model.DataPointFetcher
 import com.example.infone.utils.RequestUtils
 import com.example.infone.utils.Util
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.stereotype.Component
 
-@Component
-class STOXX50E : DataPointFetcher {
-
-    private val ticker = "^STOXX50E"
+abstract class StockIndexFetcher(
+    private val ticker: String,
+    private val indexName: String,
+    private val description: String
+) : DataPointFetcher {
     private val period = "2d"
     private val interval = "1d"
     val id = DataPointFetcher.getNextId()
-    val mapper = ObjectMapper()
+    private val mapper = ObjectMapper()
 
     override fun fetch(): DataPoint {
         val response = RequestUtils.yahooFinanceRequest(ticker, period, interval)
@@ -34,7 +34,7 @@ class STOXX50E : DataPointFetcher {
             val oneDayChange = todayClose - yesterdayClose
             val formattedChange = Util.formatDouble(oneDayChange)
             val formattedPercentage = Util.formatDouble(oneDayChange / yesterdayClose * 100)
-            return DataPoint(id, "STOXX 50 Europe", "$formattedChange ($formattedPercentage%)", "STOXX 50 Europe index at close")
+            return DataPoint(id, indexName, "$formattedChange ($formattedPercentage%)", description)
         } else {
             throw RuntimeException("Not enough data available to calculate one-day change")
         }
