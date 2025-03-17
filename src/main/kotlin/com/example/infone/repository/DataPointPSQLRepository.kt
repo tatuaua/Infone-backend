@@ -2,6 +2,8 @@ package com.example.infone.repository
 
 import com.example.infone.model.DataPoint
 import jakarta.annotation.PostConstruct
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Profile
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
@@ -11,9 +13,11 @@ import org.springframework.stereotype.Repository
 @Profile("docker")
 class DataPointPSQLRepository(private val jdbcTemplate: JdbcTemplate) : DataPointRepository {
 
+    private val logger: Logger = LoggerFactory.getLogger(DataPointPSQLRepository::class.java)
+
     @PostConstruct
-    override fun createTable() {
-        print("Creating table")
+    override fun dropAndCreateTable() {
+        logger.info("Dropping and creating PSQL table")
         val dropTable = "DROP TABLE IF EXISTS data_points"
         val createTable = """
             CREATE TABLE data_points (
