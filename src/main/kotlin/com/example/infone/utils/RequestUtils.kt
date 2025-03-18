@@ -38,4 +38,15 @@ object RequestUtils {
         }
         return makeRequest(url, HttpMethod.GET, headers, null)
     }
+
+    fun spotifyAuthRequest(clientId: String, clientSecret: String): ResponseEntity<String> {
+        val url = "https://accounts.spotify.com/api/token"
+        val body = "grant_type=client_credentials&client_id=$clientId&client_secret=$clientSecret"
+
+        val headers = HttpHeaders().apply {
+            set("Content-Type", "application/x-www-form-urlencoded")
+        }
+
+        return makeRequest(url, HttpMethod.POST, headers, body)
+    }
 }

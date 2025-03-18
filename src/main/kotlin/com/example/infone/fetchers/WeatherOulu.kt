@@ -16,6 +16,7 @@ class WeatherOulu : DataPointFetcher {
     private val url = "https://api.open-meteo.com/v1/forecast?latitude=65.0121&longitude=25.4651&hourly=temperature_2m,relative_humidity_2m&timezone=auto&forecast_days=1"
     private val id = DataPointFetcher.getNextId()
     private val description = "Average temperature and humidity in Oulu from 8am to 8pm"
+    private val name = "Avg temp./humid. in Oulu"
 
     override fun fetch(): DataPoint {
         val response = RequestUtils.makeRequest(url, HttpMethod.GET, HttpHeaders(), null)
@@ -31,7 +32,7 @@ class WeatherOulu : DataPointFetcher {
             format(getAverageHumidityFrom8amTo8pm(body)).
             replace(",", ".")
 
-        return DataPoint(id, "Avg temp./humid. in Oulu", "$averageTemperature°C / $averageHumidity%", description)
+        return DataPoint(id, name, "$averageTemperature°C / $averageHumidity%", description)
     }
 
     fun getAverageTemperatureFrom8amTo8pm(jsonData: String): Double {

@@ -1,6 +1,11 @@
 spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
+
+api.key: bbdbca8e-67a0-43a0-82d7-41363541ea4b
+spotify.client.id: some-client-id
+spotify.client.secret: some-client-secret
+
 ---
 spring:
   config:
@@ -10,8 +15,6 @@ spring:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
-name: infone-local
-api.key: some-api-key
 
 ---
 spring:
@@ -23,5 +26,3 @@ spring:
     url: jdbc:postgresql://postgres:5432/mydatabase
     username: myuser
 
-name: infone-docker
-api.key: some-api-key
