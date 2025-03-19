@@ -39,8 +39,8 @@ class SpotifySuomiHitit : DataPointFetcher {
         val topTrack = mapper.readTree(response.body ?: throw RuntimeException("Response body is empty"))
             .get("tracks")
             .get("items")
-            .maxBy { it.get("track").get("popularity").asInt() }
-            .get("track")
+            .mapNotNull { it.get("track") }
+            .maxByOrNull { it.get("popularity").asInt() } ?: throw RuntimeException("No tracks found")
         return DataPoint(
             id,
             name,
