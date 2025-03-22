@@ -1,7 +1,6 @@
 package com.example.infone.controller
 
 import com.example.infone.model.DataPoint
-import com.example.infone.repository.DataPointRepository
 import com.example.infone.service.DataPointService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

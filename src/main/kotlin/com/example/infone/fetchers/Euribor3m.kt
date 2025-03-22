@@ -7,12 +7,9 @@ import com.example.infone.utils.Util
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.stereotype.Component
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.http.ResponseEntity
 import java.nio.file.Files
-import java.text.DecimalFormat
 
 @Component
 class Euribor3m: DataPointFetcher {
