@@ -11,6 +11,10 @@ class DataPointGrugRepository : DataPointRepository {
 
     val db: GrugDBClient = GrugDBClient.getInstance()
 
+    init {
+        GrugDBClient.clearDatabaseDirectory()
+    }
+
     override fun getDataPoints(): List<DataPoint> {
         return db.find(DataPoint::class.java)
     }
