@@ -9,17 +9,14 @@ import org.springframework.stereotype.Repository
 @Profile("local")
 class DataPointGrugRepository : DataPointRepository {
 
-    val db = GrugDBClient.getInstance(true) ?: throw Exception("Failed to connect to GrugDB")
-
-    override fun dropAndCreateTable() {
-    }
+    val db: GrugDBClient = GrugDBClient.getInstance()
 
     override fun getDataPoints(): List<DataPoint> {
         return db.find(DataPoint::class.java)
     }
 
     override fun getDataPoints(ids: List<Int>): List<DataPoint> {
-        return db.find(DataPoint::class.java).stream().filter { it.id in ids }.toList()
+        return db.find(DataPoint::class.java) { it.id in ids }
     }
 
     override fun upsertDatapoint(

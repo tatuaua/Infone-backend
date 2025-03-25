@@ -16,7 +16,7 @@ class DataPointPSQLRepository(private val jdbcTemplate: JdbcTemplate) : DataPoin
     private val logger: Logger = LoggerFactory.getLogger(DataPointPSQLRepository::class.java)
 
     @PostConstruct
-    override fun dropAndCreateTable() {
+    fun dropAndCreateTable() {
         logger.info("Dropping and creating PSQL table")
         val dropTable = "DROP TABLE IF EXISTS data_points"
         val createTable = """
