@@ -1,7 +1,7 @@
 package com.example.infone.repository
 
+import com.example.infone.utils.GrugDBClient
 import com.example.infone.model.DataPoint
-import org.example.grugDB.GrugDBClient
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 
