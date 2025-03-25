@@ -4,12 +4,14 @@ Infone is a simple application that sends small data points to the user every da
 A user can choose which data points they want to receive and at what time they want to receive them.
 This is the backend part of the application which only fetches + stores data points and responds to requests.
 
-## Structure
+## Architecture
 
 The backend is a simple Spring Boot application that uses a PostgreSQL database to store the data points.
-The application runs in a Docker container.
+The application and database run in Docker containers.
 New data points can be easily added by defining a @Component that implements DataPointFetcher.
 DataFetcherRunner is run every 10 minutes which updates the data points in the database.
+
+![Architecture](images/infone-backend.jpg)
 
 ## Roadmap
 
