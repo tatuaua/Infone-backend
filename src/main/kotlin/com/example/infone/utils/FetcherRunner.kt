@@ -34,7 +34,6 @@ class FetcherRunner(
         }
 
         val results = deferredResults.awaitAll()
-        logger.info("Fetched ${results.size} data points (including failures)")
 
         val successfulResults = results.filterNotNull()
         successfulResults.map { dataPoint ->
@@ -46,6 +45,6 @@ class FetcherRunner(
             )
         }
 
-        logger.info("Updated ${successfulResults.size} data points")
+        logger.info("Updated ${successfulResults.size} data points with ${results.size - successfulResults.size} failures")
     }
 }
