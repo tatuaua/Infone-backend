@@ -8,6 +8,7 @@ class GrugDBClient private constructor() {
         private val singletonInstance: GrugDBClient by lazy { GrugDBClient() }
         private val databaseDirectory = File("grug_db")
         private val logger = LoggerFactory.getLogger(GrugDBClient::class.java)
+        private val cache = mutableMapOf<String, List<Any>>()
 
         /**
          * Retrieves or creates a singleton instance of GrugDBClient.
@@ -34,6 +35,7 @@ class GrugDBClient private constructor() {
                     logger.error("Failed to delete database file {}", storedFile.name)
                 }
             }
+            cache.clear()
         }
     }
 
@@ -58,6 +60,7 @@ class GrugDBClient private constructor() {
                 objectOutput.writeObject(entityList)
             }
         }
+        cache[entityTypeName] = entityList
     }
 
     /**
@@ -80,6 +83,7 @@ class GrugDBClient private constructor() {
                 objectOutput.writeObject(entityList)
             }
         }
+        cache[entityTypeName] = entityList
     }
 
     /**
@@ -109,6 +113,7 @@ class GrugDBClient private constructor() {
                 objectOutput.writeObject(entityList)
             }
         }
+        cache[entityTypeName] = entityList
     }
 
     /**
@@ -128,6 +133,7 @@ class GrugDBClient private constructor() {
                 objectOutput.writeObject(existingEntityList)
             }
         }
+        cache[entityTypeName] = existingEntityList
     }
 
     /**
@@ -175,6 +181,7 @@ class GrugDBClient private constructor() {
             if (!storageFile.delete()) {
                 logger.debug("File couldn't be deleted")
             }
+            cache.remove(entityTypeName)
             logger.debug("Collection empty, deleted file {}", storageFile.name)
             return
         }
@@ -184,10 +191,12 @@ class GrugDBClient private constructor() {
                 objectOutput.writeObject(entityList)
             }
         }
+        cache[entityTypeName] = entityList
     }
 
     /**
      * Loads a collection of entities of a given type from the Grug database file.
+     * Uses in-memory cache to avoid repeated file reads.
      */
     @Suppress("UNCHECKED_CAST")
     private fun <T : Any> loadCollection(
@@ -195,6 +204,13 @@ class GrugDBClient private constructor() {
         storageFile: File
     ): List<T> {
         val entityTypeName = entityClass.simpleName.lowercase()
+
+        // Return from cache if available
+        cache[entityTypeName]?.let {
+            logger.debug("Cache hit for {}", entityTypeName)
+            return it as List<T>
+        }
+        
         if (!storageFile.exists() || storageFile.length() == 0L) {
             logger.debug("No data found for {}, returning empty list", entityTypeName)
             return emptyList()
@@ -205,7 +221,9 @@ class GrugDBClient private constructor() {
                 ObjectInputStream(fileInput).use { objectInput ->
                     val deserializedObject = objectInput.readObject()
                     if (deserializedObject is List<*>) {
-                        deserializedObject as List<T>
+                        val result = deserializedObject as List<T>
+                        cache[entityTypeName] = result
+                        result
                     } else {
                         logger.warn("Corrupted data for {}, resetting to empty list", entityTypeName)
                         emptyList()
