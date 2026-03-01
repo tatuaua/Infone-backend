@@ -22,9 +22,9 @@ class DataPointController(private val dataPointService: DataPointService) {
             logger.warn("Invalid API key: {}", apiKey)
             return ResponseEntity.status(401).build()
         }
-        logger.info("Fetching data points by ids: {}", ids)
+        logger.debug("Fetching data points by ids: {}", ids)
         val dataPoints = dataPointService.getDataPoints(ids)
-        logger.info("Retrieved {} data points", dataPoints.size)
+        logger.debug("Retrieved {} data points", dataPoints.size)
         return ResponseEntity.ok(dataPoints)
     }
 
