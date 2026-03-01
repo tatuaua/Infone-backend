@@ -2,11 +2,9 @@ package com.example.infone.repository
 
 import com.example.infone.utils.GrugDBClient
 import com.example.infone.model.DataPoint
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Repository
 
 @Repository
-@Profile("local")
 class DataPointGrugRepository : DataPointRepository {
 
     val db: GrugDBClient = GrugDBClient.getInstance()

@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
 api.key: bbdbca8e-67a0-43a0-82d7-41363541ea4b
 spotify.client.id: some-client-id
@@ -11,16 +13,9 @@ spring:
   config:
     activate:
       on-profile: local
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
 ---
 spring:
   config:
     activate:
       on-profile: docker
-  datasource:
-    password: secret
-    url: jdbc:postgresql://postgres:5432/mydatabase
-    username: myuser
-
