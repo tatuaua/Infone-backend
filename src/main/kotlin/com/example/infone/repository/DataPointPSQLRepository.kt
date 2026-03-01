@@ -1,4 +1,4 @@
-package com.example.infone.repository
+/*package com.example.infone.repository
 
 import com.example.infone.model.DataPoint
 import jakarta.annotation.PostConstruct
@@ -56,3 +56,4 @@ class DataPointPSQLRepository(private val jdbcTemplate: JdbcTemplate) : DataPoin
         jdbcTemplate.update(sql, id, name, value, description)
     }
 }
+*/

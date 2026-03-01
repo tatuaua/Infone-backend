@@ -29,8 +29,10 @@ class DataPointGrugRepository : DataPointRepository {
         value: String,
         description: String
     ) {
-        db.delete(DataPoint::class.java) { it.id == id }
-        db.save(DataPoint(id, name, value, description))
+        db.updateOrSave(DataPoint(id, name, value, description), {it.id == id}, { it ->
+            it.name = name
+            it.value = value
+            it.description = description
+        } )
     }
-
 }
